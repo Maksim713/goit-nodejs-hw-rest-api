@@ -15,7 +15,7 @@ const getContactById = async (req, res, next) => {
     const { id } = req.params;
     const result = await contacts.getById(id);
     if (!result) {
-      notFoundId(res, id);
+      throw requestError(404);
     }
     res.json(result);
   } catch (error) {
@@ -27,6 +27,7 @@ const addContact = async (req, res, next) => {
   try {
     const { name, email, phone } = req.body;
     const result = await contacts.add({ name, email, phone });
+
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -63,10 +64,7 @@ const delContactById = async (req, res, next) => {
       throw requestError(404);
     }
 
-    res.status(200).json({
-      data: { contact },
-      message: `Contact by id: ${contact.id} has been deleted`,
-    });
+    res.status(200).json({ message: "contact deleted" });
   } catch (error) {
     next(error);
   }
@@ -79,14 +77,3 @@ module.exports = {
   delContactById,
   updateContactById,
 };
-
-function notFoundId(res, id) {
-  const code = 404;
-  res.status(code);
-  res.json({
-    data: {},
-    message: `Contact by id: ${id} hasn't been found`,
-    status: "error",
-    code,
-  });
-}
