@@ -30,7 +30,7 @@ const add = async (data) => {
   return newContact;
 };
 
-const updateById = async (id, name, email, phone) => {
+const updateById = async (id, { name, email, phone }) => {
   const contacts = await getAll();
   const index = contacts.findIndex((item) => item.id === id);
   if (index === -1) {

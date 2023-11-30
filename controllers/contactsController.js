@@ -39,15 +39,23 @@ const updateContactById = async (req, res, next) => {
     const { id } = req.params;
     const { name, email, phone } = req.body;
 
-    if (!name && !email && !phone) {
+    if (Object.keys(req.body).length === 0) {
       throw requestError(400);
     }
 
-    const result = await contacts.updateById(id, name, email, phone);
+    const existingContact = await contacts.getById(id);
 
-    if (!result) {
+    if (!existingContact) {
       throw requestError(404);
     }
+
+    const updatedContact = {
+      name: name !== undefined ? name : existingContact.name,
+      email: email !== undefined ? email : existingContact.email,
+      phone: phone !== undefined ? phone : existingContact.phone,
+    };
+
+    const result = await contacts.updateById(id, updatedContact);
 
     res.status(200).json(result);
   } catch (error) {
