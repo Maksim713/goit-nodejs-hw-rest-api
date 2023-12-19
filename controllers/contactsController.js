@@ -85,7 +85,7 @@ const patchFavoriteById = async (req, res, next) => {
     const { id } = req.params;
 
     if (Object.keys(req.body).length === 0) {
-      throw requestError(400);
+      return res.status(400).json({ message: "missing field favorite" });
     }
 
     const existingContact = await Contact.findByIdAndUpdate(id, req.body, {
