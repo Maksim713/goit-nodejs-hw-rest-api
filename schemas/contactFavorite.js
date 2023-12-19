@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 const updateFavoriteJoiSchema = (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
-    return res.status(400).json({ message: "Missing fields" });
+    return res.status(400).json({ message: "missing field favorite" });
   }
   const updateFavoriteJoiSchema = Joi.object({
     favorite: Joi.bool().required().messages({
