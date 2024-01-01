@@ -1,0 +1,20 @@
+const express = require("express");
+
+const ctrl = require("../../controllers/auth");
+
+const { registerJoiSchema, loginJoiSchema } = require("../../schemas");
+const { validateBody, authenticate } = require("../../middlewares");
+
+const router = express.Router();
+
+// signup
+router.post("/register", validateBody(registerJoiSchema), ctrl.register);
+
+// signin
+router.post("/login", validateBody(loginJoiSchema), ctrl.login);
+
+router.get("/current", authenticate, ctrl.getCurrent);
+
+router.post("/logout", authenticate, ctrl.logout);
+
+module.exports = router;
