@@ -7,10 +7,6 @@ const subscriptionTypes = ["starter", "pro", "business"];
 
 const userSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       match: emailRegexp,

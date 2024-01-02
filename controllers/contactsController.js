@@ -14,7 +14,8 @@ const getAllContacts = async (req, res, next) => {
 const getContactById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Contact.findById(id);
+    const { _id: owner } = req.user;
+    const result = await Contact.findOne({ _id: id, owner });
     if (!result) {
       throw requestError(404);
     }
@@ -44,9 +45,15 @@ const updateContactById = async (req, res, next) => {
       throw requestError(400);
     }
 
-    const existingContact = await Contact.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const { _id: owner } = req.user;
+
+    const existingContact = await Contact.findOneAndUpdate(
+      { _id: id, owner },
+      req.body,
+      {
+        new: true,
+      }
+    );
 
     if (!existingContact) {
       throw requestError(404);
@@ -70,7 +77,8 @@ const updateContactById = async (req, res, next) => {
 const delContactById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const contact = await Contact.findByIdAndDelete(id);
+    const { _id: owner } = req.user;
+    const contact = await Contact.findOneAndDelete({ _id: id, owner });
 
     if (!contact) {
       throw requestError(404);
@@ -85,10 +93,14 @@ const delContactById = async (req, res, next) => {
 const patchFavoriteById = async (req, res, next) => {
   try {
     const { id } = req.params;
-
-    const existingContact = await Contact.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const { _id: owner } = req.user;
+    const existingContact = await Contact.findOneAndUpdate(
+      { _id: id, owner },
+      req.body,
+      {
+        new: true,
+      }
+    );
 
     if (!existingContact) {
       throw requestError(404);
