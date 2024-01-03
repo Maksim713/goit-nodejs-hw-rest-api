@@ -84,23 +84,33 @@ const logout = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
-  const { path: tempUpload, originalname } = req.file;
+  try {
+    if (!req.file) {
+      throw new Error("No file provided");
+    }
 
-  const imageName = `${_id}_${originalname}`;
-  const resultUpload = path.join(avatarsDir, imageName);
+    const { _id } = req.user;
+    const { path: tempUpload, originalname } = req.file;
 
-  const img = await Jimp.read(tempUpload);
-  await img.resize(250, 250).writeAsync(tempUpload);
+    const imageName = `${_id}_${originalname}`;
+    const resultUpload = path.join(avatarsDir, imageName);
 
-  await fs.rename(tempUpload, resultUpload);
+    const img = await Jimp.read(tempUpload);
+    await img.resize(250, 250).writeAsync(tempUpload);
 
-  const avatarURL = path.join("avatars", imageName);
-  await User.findByIdAndUpdate(_id, { avatarURL });
+    await fs.rename(tempUpload, resultUpload);
 
-  res.json({
-    avatarURL,
-  });
+    const avatarURL = path.join("avatars", imageName);
+    await User.findByIdAndUpdate(_id, { avatarURL });
+
+    res.json({
+      avatarURL,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || "Failed to update avatar",
+    });
+  }
 };
 
 module.exports = {
