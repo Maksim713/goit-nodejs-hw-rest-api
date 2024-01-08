@@ -2,13 +2,21 @@ const express = require("express");
 
 const ctrl = require("../../controllers/auth");
 
-const { registerJoiSchema, loginJoiSchema } = require("../../schemas");
+const {
+  registerJoiSchema,
+  loginJoiSchema,
+  emailSchema,
+} = require("../../schemas");
 const { validateBody, authenticate, upload } = require("../../middlewares");
 
 const router = express.Router();
 
 // signup
 router.post("/register", validateBody(registerJoiSchema), ctrl.register);
+
+router.get("/verify/:verificationCode", ctrl.verifyEmail);
+
+router.post("/verify", validateBody(emailSchema), ctrl.resendVerifyEmail);
 
 // signin
 router.post("/login", validateBody(loginJoiSchema), ctrl.login);
