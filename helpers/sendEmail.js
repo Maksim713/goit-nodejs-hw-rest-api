@@ -16,7 +16,7 @@ const nodemailerConfig = {
 const transport = nodemailer.createTransport(nodemailerConfig);
 
 const sendEmail = async ({ to, subject, html }) => {
-  const email = { to, subject, html, from: "nicklemster@gmail.com" };
+  const email = { to, subject, html, from: "maxims9513@gmail.com" };
 
   await transport.sendMail(email).then(() => console.log("Email sent success"));
   return true;
