@@ -5,6 +5,7 @@ const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const emailSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
+  verificationToken: Joi.string().allow(null).optional(),
 });
 
 module.exports = {
